@@ -1,26 +1,41 @@
-let humanScore=0;
 let computerScore=0;
-
-function getComputerChoice(){
-    let x=Math.random();
-    if(x<=(1/3)) return "rock";
-    else if(x<=2/3) return "paper";
-    else return "scissor";
-}
+let humanScore=0;
+let humanChoice='';
+let computerChoice='';
+let clicks=0;
 
 function getHumanChoice(){
-    let choice=prompt("Enter rock, paper or scissor: ");
-    choice=choice.toLowerCase();
-
-    while(choice!=='rock' && choice!=='paper' && choice!=='scissor'){
-        choice=prompt("Enter a valid choice: ");
-        choice=choice.toLowerCase();
-    }
-    return choice;
+    const rock=document.querySelector('.b1');
+    const paper=document.querySelector('.b2');
+    const scissor=document.querySelector('.b3');
+    
+    rock.addEventListener('click', ()=> {
+        humanChoice="rock";
+        clicks++;
+        getComputerChoice();
+    });
+    paper.addEventListener('click', ()=> {
+        humanChoice="paper";
+        clicks++;
+        getComputerChoice();
+    });
+    scissor.addEventListener('click', ()=> {
+        humanChoice="scissor";
+        clicks++;
+        getComputerChoice();
+    });
+    
 }
 
-function playRound(humanChoice, computerChoice){
-    humanChoice=humanChoice.toLowerCase();
+function getComputerChoice(){
+    if(Math.random()<=1/3) computerChoice="rock";
+    else if(Math.random()<=2/3) computerChoice="paper";
+    else computerChoice="scissor";
+
+    playRound(humanChoice,computerChoice);
+}
+
+function playRound(humanChoice,computerChoice){
     if(computerChoice==="scissor"){
         if(humanChoice==="rock") humanScore++;
         else if(humanChoice==="paper") computerScore++;
@@ -33,22 +48,41 @@ function playRound(humanChoice, computerChoice){
         if(humanChoice==="scissor") humanScore++;
         else if(humanChoice==="rock") computerScore++;
     }
+    result();
 }
 
+function result(){
+    
+   
+    const results=document.querySelector('.results');
 
-function playGame(){
-    for(let i=0;i<5;i++){
-        let humanSelection=getHumanChoice();
-        let computerSelection=getComputerChoice();
+    const round=document.createElement('ul');
+    round.innerText=`Your Pick: ${humanChoice} || Computer Pick: ${computerChoice}
+                    Score: ${humanScore}-${computerScore}` ;
+    results.appendChild(round);
 
-        playRound(humanSelection,computerSelection);
-        console.log("your choice: "+humanSelection+" || computer choice: "+computerSelection);
-        console.log("your score: ",humanScore);
-        console.log("computer score: ",computerScore);
+    if(clicks===6)
+    {
+        if(humanScore>computerScore) {
+            console.log("YOU WIN! ("+humanScore+"-"+computerScore+")");
+            round.innerText=`YOU WIN! (${humanScore}-${computerScore})`;
+            results.appendChild(round);
+        }
+        else if(humanScore<computerScore) {
+            console.log("YOU LOSE! ("+humanScore+"-"+computerScore+")");
+            round.innerText=`YOU LOSE  ! (${humanScore}-${computerScore})`;
+            results.appendChild(round);
+        }
+        else {
+            console.log("TIE! ("+humanScore+"-"+computerScore+")");
+            round.innerText=`TIE! (${humanScore}-${computerScore})`;
+            results.appendChild(round);
+        }
     }
-    if(humanScore>computerScore) console.log("YOU WIN! ("+humanScore+"-"+computerScore+")");
-    else if(humanScore<computerScore) console.log("YOU LOSE! ("+humanScore+"-"+computerScore+")");
-    else console.log("TIE! ("+humanScore+"-"+computerScore+")");
+    console.log(humanScore);
+    console.log(computerScore);
+    console.log(humanChoice);
+    console.log(computerChoice);
 }
 
-playGame();
+getHumanChoice();
